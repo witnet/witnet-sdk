@@ -31,7 +31,7 @@ export class RadonFilter {
 		if (this.args) {
 			json.args = humanize ? this.args : Array.from(cbor.encode(this.args));
 		} else if (!humanize) {
-			json.args = Array.from(cbor.encode([]))
+			json.args = Array.from(cbor.encode([]));
 		}
 		return json;
 	}
