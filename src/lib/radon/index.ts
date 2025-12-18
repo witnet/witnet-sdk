@@ -10,6 +10,8 @@ const { Root: ProtoRoot } = protobuf;
 const protoRoot = ProtoRoot.fromJSON(require("../../../witnet/witnet.proto.json"));
 const RADRequest = protoRoot.lookupType("RADRequest");
 
+const _DEFAULT_DRY_RUN_TIMEOUT_MSECS = 5000;
+
 import {
 	execRadonBytecode,
 	fromHexString,
@@ -162,8 +164,13 @@ export class RadonRequest extends RadonArtifact {
 		}
 	}
 
-	public async execDryRun(verbose = false): Promise<string> {
-		return (await execRadonBytecode(this.toBytecode(), "--json", verbose ? "--verbose" : "")).trim();
+	public async execDryRun(options?: { verbose: boolean; timeout: number }): Promise<string> {
+		return execRadonBytecode(
+			this.toBytecode(),
+			options?.timeout ?? _DEFAULT_DRY_RUN_TIMEOUT_MSECS,
+			"--json",
+			options?.verbose ? "--verbose" : "",
+		).then((result) => result.trim());
 	}
 
 	public get dataType(): string {

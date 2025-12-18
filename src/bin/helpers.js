@@ -114,9 +114,9 @@ export function deleteExtraFlags(args) {
 	return args.filter((arg) => !arg.startsWith("--"));
 }
 
-export function cmd(...command) {
+export function cmd(timeout, ...command) {
 	return new Promise((resolve, reject) => {
-		exec(command.join(" "), { maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
+		exec(command.join(" "), { timeout, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
 			if (error) {
 				reject(error);
 			}
@@ -128,22 +128,12 @@ export function cmd(...command) {
 	});
 }
 
-export async function execRadonBytecode(bytecode, ...flags) {
+export async function execRadonBytecode(bytecode, timeout, ...flags) {
 	if (!isHexString(bytecode)) {
 		throw EvalError("invalid hex string");
 	} else {
 		const npx = os.type() === "Windows_NT" ? "npx.cmd" : "npx";
-		return cmd(npx, "witsdk", "radon", "dry-run", bytecode, ...flags);
-		// .catch((err) => {
-		//     let errorMessage = err.message.split('\n').slice(1).join('\n').trim()
-		//     const errorRegex = /.*^error: (?<message>.*)$.*/gm
-		//     const matched = errorRegex.exec(err.message)
-		//     if (matched) {
-		//         errorMessage = matched.groups.message
-		//     }
-		//     console.log(errorMessage || err)
-		//     console.error(errorMessage || err)
-		// })
+		return cmd(timeout, npx, "witsdk", "radon", "dry-run", bytecode, ...flags);
 	}
 }
 
