@@ -10,7 +10,7 @@ const { Root: ProtoRoot } = protobuf;
 const protoRoot = ProtoRoot.fromJSON(require("../../../witnet/witnet.proto.json"));
 const RADRequest = protoRoot.lookupType("RADRequest");
 
-const _DEFAULT_DRY_RUN_TIMEOUT_MSECS = 5000;
+const _DEFAULT_DRY_RUN_TIMEOUT_MSECS = 15000;
 
 import {
 	execRadonBytecode,
