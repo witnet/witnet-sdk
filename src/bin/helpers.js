@@ -1,4 +1,4 @@
-import { exec } from "node:child_process";
+import { exec, spawn } from "node:child_process";
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import * as net from "node:net";
@@ -115,10 +115,12 @@ export function deleteExtraFlags(args) {
 	return args.filter((arg) => !arg.startsWith("--"));
 }
 
-export function cmd(timeout, ...command) {
+export function cmd(timeout, ...commands) {
 	return new Promise((resolve, reject) => {
-		const child = spawn("npx", command, {
+		const [bin, ...args] = commands;
+		const child = spawn(bin, args, {
 			detached: process.platform !== "win32",
+			shell: process.platform === "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
 				...process.env,
