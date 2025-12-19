@@ -8,6 +8,7 @@ import * as readline from "node:readline";
 import moment from "moment";
 
 const require = createRequire(import.meta.url);
+const _TOOLKIT_RUN_TIMEOUT_MSECS = 30000;
 
 export const colorstrip = (str) =>
 	str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "");
@@ -467,7 +468,7 @@ export function spliceWildcard(obj, argIndex, argValue, argsCount) {
 export async function toolkitRun(settings, args) {
 	const cmd = `${settings.paths.toolkitBinPath} ${args.join(" ")}`;
 	return new Promise((resolve, reject) => {
-		exec(cmd, { maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
+		exec(cmd, { timeout: _TOOLKIT_RUN_TIMEOUT_MSECS, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
 			if (error) {
 				reject(error);
 			}
