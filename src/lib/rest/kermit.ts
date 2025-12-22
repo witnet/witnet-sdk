@@ -1,6 +1,12 @@
 import { default as axios } from "axios";
 import { default as jsonBig } from "json-bigint";
-import type { Hash } from "../types.js";
+import type {
+	GetDataRequestEtherealReport,
+	GetDataRequestFullReport,
+	GetDataRequestMode,
+	Hash,
+	SyncStatus,
+} from "../types.js";
 import { parseURL } from "../utils.js";
 
 import type { DataPushReport } from "./types.js";
@@ -13,7 +19,12 @@ const stringify = (query: any) =>
 
 interface IKermitClient {
 	getDataPushReport(witDrTxHash: Hash, evmNetwork?: number | string): Promise<DataPushReport>;
-	// searchDataRequests(hash: Hash, {}): Promise<any>;
+	getSyncStatus(isMainnet: boolean): Promise<SyncStatus>;
+	searchDataRequests(
+		radHash: Hash,
+		isMainnet: boolean,
+		options?: any,
+	): Promise<Array<GetDataRequestEtherealReport | GetDataRequestFullReport>>;
 }
 
 export class KermitError extends Error {
@@ -75,5 +86,29 @@ export class KermitClient implements IKermitClient {
 			witDrTxHash,
 			evmNetwork,
 		});
+	}
+
+	public async getSyncStatus(isMainnet: boolean): Promise<SyncStatus> {
+		return this.callApiGetMethod<SyncStatus>("sync_status", isMainnet);
+	}
+
+	public async searchDataRequests(
+		radHash: Hash,
+		isMainnet: boolean,
+		options?: {
+			limit?: number;
+			offset?: number;
+			mode?: GetDataRequestMode;
+			reverse?: boolean;
+		},
+	): Promise<Array<GetDataRequestEtherealReport | GetDataRequestFullReport>> {
+		return this.callApiGetMethod<Array<GetDataRequestEtherealReport | GetDataRequestFullReport>>(
+			"search_data_requests",
+			{
+				radHash,
+				isMainnet,
+				...options,
+			},
+		);
 	}
 }
