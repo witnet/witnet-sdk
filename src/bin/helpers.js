@@ -150,7 +150,6 @@ export function cmd(timeout, ...commands) {
 						if (finished) return;
 						finished = true;
 						killTree();
-						reject(new Error(`npx command timed out after ${commas(timeout)} ms`));
 					}, timeout)
 				: null;
 
