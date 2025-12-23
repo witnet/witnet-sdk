@@ -89,7 +89,7 @@ export class KermitClient implements IKermitClient {
 	}
 
 	public async getSyncStatus(isMainnet: boolean): Promise<SyncStatus> {
-		return this.callApiGetMethod<SyncStatus>("sync_status", isMainnet);
+		return this.callApiGetMethod<SyncStatus>("sync_status", { isMainnet });
 	}
 
 	public async searchDataRequests(
