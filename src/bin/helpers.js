@@ -119,7 +119,7 @@ export function cmd(timeout, ...commands) {
 	return new Promise((resolve, reject) => {
 		const [bin, ...args] = commands;
 		const child = spawn(bin, args, {
-			detached: process.platform !== "win32",
+			detached: process.env.WITSDK_DRY_RUN_DETACHED || false,
 			shell: process.platform === "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
