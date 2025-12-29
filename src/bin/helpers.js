@@ -6,7 +6,7 @@ import * as os from "node:os";
 import path from "node:path";
 import * as readline from "node:readline";
 import moment from "moment";
-import kill from "tree-kill"
+import kill from "tree-kill";
 
 const require = createRequire(import.meta.url);
 const _TOOLKIT_RUN_TIMEOUT_MSECS = 30000;
@@ -141,7 +141,7 @@ export function cmd(timeout, ...commands) {
 			console.debug("=> Killing process tree with PID:", child.pid);
 			console.debug("   Command:", `${bin} ${args.join(" ")}`);
 			if (!child.pid) return;
-			kill(child.pid, (err) => console.debug("   Error:", err))
+			kill(child.pid, (err) => console.debug("   Error:", err));
 		};
 
 		const timer =
@@ -169,7 +169,7 @@ export function cmd(timeout, ...commands) {
 			if (finished) return;
 			finished = true;
 			if (timer) clearTimeout(timer);
-			
+
 			if (signal) {
 				killTree();
 				reject(new Error(`npx terminated by signal ${signal}`));
