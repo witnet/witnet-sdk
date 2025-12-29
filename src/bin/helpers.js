@@ -194,7 +194,16 @@ export async function execRadonBytecode(bytecode, timeout, ...flags) {
 		throw EvalError("invalid hex string");
 	} else {
 		const npx = os.type() === "Windows_NT" ? "npx.cmd" : "npx";
-		return cmd(timeout, npx, "witsdk", "radon", "dry-run", bytecode, ...flags);
+		return cmd(
+			timeout || _TOOLKIT_RUN_TIMEOUT_MSECS, 
+			npx, 
+			"witsdk", 
+			"radon", 
+			"dry-run", 
+			bytecode, 
+			"--timeout", timeout || _TOOLKIT_RUN_TIMEOUT_MSECS,
+			...flags
+		);
 	}
 }
 
