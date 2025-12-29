@@ -68,6 +68,9 @@ importers:
       secp256k1:
         specifier: ^5.0.1
         version: 5.0.1
+      tree-kill:
+        specifier: ^1.2.2
+        version: 1.2.2
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.3.10
@@ -913,6 +916,10 @@ packages:
 
   tokenizr@1.5.7:
     resolution: {integrity: sha512-w6qS6F5PNtY30DxoRD4a7nC7zOlPM2SlpQ4zLhOmqBaB1VCZrlV82bLpc/lKNOdNmrwIwcsJLDcjEJ8f7UG6Mg==}
+
+  tree-kill@1.2.2:
+    resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
+    hasBin: true
 
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
@@ -1783,6 +1790,8 @@ snapshots:
   tmp@0.2.5: {}
 
   tokenizr@1.5.7: {}
+
+  tree-kill@1.2.2: {}
 
   tslib@2.7.0: {}
 
