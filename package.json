@@ -80,6 +80,7 @@
 		"promise-poller": "^1.9.1",
 		"protobufjs": "^7.5.4",
 		"qrcode-terminal": "^0.12.0",
+		"tree-kill": "^1.2.2",
 		"secp256k1": "^5.0.1"
 	},
 	"devDependencies": {
