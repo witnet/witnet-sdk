@@ -580,7 +580,6 @@ export async function toolkitRun(settings, args) {
 		child.on("error", (err) => {
 			if (finished) return;
 			finished = true;
-			if (timer) clearTimeout(timer);
 			killTree();
 			reject(err);
 		});
@@ -588,7 +587,6 @@ export async function toolkitRun(settings, args) {
 		child.on("close", (code, signal) => {
 			if (finished) return;
 			finished = true;
-			if (timer) clearTimeout(timer);
 
 			if (signal) {
 				killTree();
