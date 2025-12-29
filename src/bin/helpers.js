@@ -1,4 +1,4 @@
-import { exec, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import * as net from "node:net";
@@ -133,8 +133,8 @@ export function cmd(timeout, ...commands) {
 		let finished = false;
 
 		const killTree = () => {
-			console.debug("=> Killing process tree with PID:", child.pid)
-			console.debug("   Command:", `${bin} ${args.join(" ")}`)
+			console.debug("=> Killing process tree with PID:", child.pid);
+			console.debug("   Command:", `${bin} ${args.join(" ")}`);
 			if (!child.pid) return;
 			try {
 				if (process.platform === "win32") {
@@ -144,7 +144,7 @@ export function cmd(timeout, ...commands) {
 					process.kill(-child.pid, "SIGKILL");
 				}
 			} catch (err) {
-				console.debug("   Error:", err)
+				console.debug("   Error:", err);
 			}
 		};
 
@@ -195,14 +195,15 @@ export async function execRadonBytecode(bytecode, timeout, ...flags) {
 	} else {
 		const npx = os.type() === "Windows_NT" ? "npx.cmd" : "npx";
 		return cmd(
-			timeout || _TOOLKIT_RUN_TIMEOUT_MSECS, 
-			npx, 
-			"witsdk", 
-			"radon", 
-			"dry-run", 
-			bytecode, 
-			"--timeout", timeout || _TOOLKIT_RUN_TIMEOUT_MSECS,
-			...flags
+			timeout || _TOOLKIT_RUN_TIMEOUT_MSECS,
+			npx,
+			"witsdk",
+			"radon",
+			"dry-run",
+			bytecode,
+			"--timeout",
+			timeout || _TOOLKIT_RUN_TIMEOUT_MSECS,
+			...flags,
 		);
 	}
 }
@@ -537,7 +538,7 @@ export function spliceWildcard(obj, argIndex, argValue, argsCount) {
 export async function toolkitRun(settings, args) {
 	return new Promise((resolve, reject) => {
 		const bin = `${settings.paths.toolkitBinPath}`;
-		const { timeout } = settings
+		const { timeout } = settings;
 		const child = spawn(bin, args, {
 			detached: process.env.WITSDK_DRY_RUN_DETACHED || false,
 			shell: process.platform === "win32",
