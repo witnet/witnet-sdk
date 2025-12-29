@@ -119,8 +119,12 @@ export function cmd(timeout, ...commands) {
 	return new Promise((resolve, reject) => {
 		const [bin, ...args] = commands;
 		const child = spawn(bin, args, {
-			detached: process.env.WITSDK_DRY_RUN_DETACHED ? Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true") : process.platform !== "win32",
-			shell: process.env.WITSDK_DRY_RUN_SHELL ? Boolean(process.env.WITNET_SDK_DRY_RUN_SHELL === "true") : process.platform === "win32",
+			detached: process.env.WITSDK_DRY_RUN_DETACHED
+				? Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true")
+				: process.platform !== "win32",
+			shell: process.env.WITSDK_DRY_RUN_SHELL
+				? Boolean(process.env.WITNET_SDK_DRY_RUN_SHELL === "true")
+				: process.platform === "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
 				...process.env,
@@ -541,8 +545,12 @@ export async function toolkitRun(settings, args) {
 	return new Promise((resolve, reject) => {
 		const bin = `${settings.paths.toolkitBinPath}`;
 		const child = spawn(bin, args, {
-			detached: process.env.WITSDK_DRY_RUN_DETACHED ? Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true") : process.platform !== "win32",
-			shell: process.env.WITSDK_DRY_RUN_SHELL ? Boolean(process.env.WITNET_SDK_DRY_RUN_SHELL === "true") : process.platform === "win32",
+			detached: process.env.WITSDK_DRY_RUN_DETACHED
+				? Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true")
+				: process.platform !== "win32",
+			shell: process.env.WITSDK_DRY_RUN_SHELL
+				? Boolean(process.env.WITNET_SDK_DRY_RUN_SHELL === "true")
+				: process.platform === "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
 				...process.env,
