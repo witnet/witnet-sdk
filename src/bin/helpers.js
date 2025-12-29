@@ -119,7 +119,7 @@ export function cmd(timeout, ...commands) {
 	return new Promise((resolve, reject) => {
 		const [bin, ...args] = commands;
 		const child = spawn(bin, args, {
-			detached: process.env.WITSDK_DRY_RUN_DETACHED || false,
+			detached: process.platform !== "win32" || Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true"),
 			shell: process.platform === "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
@@ -540,7 +540,7 @@ export async function toolkitRun(settings, args) {
 		const bin = `${settings.paths.toolkitBinPath}`;
 		const { timeout } = settings;
 		const child = spawn(bin, args, {
-			detached: process.env.WITSDK_DRY_RUN_DETACHED || false,
+			detached: process.platform !== "win32" || Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true"),
 			shell: process.platform === "win32",
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
