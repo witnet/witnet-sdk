@@ -141,7 +141,7 @@ export function cmd(timeout, ...commands) {
 					spawn("taskkill", ["/PID", child.pid.toString(), "/T", "/F"]);
 				} else {
 					// kill entire process group
-					process.kill(-child.pid, "SIGKILL");
+					process.kill(child.pid, "SIGKILL");
 				}
 			} catch (err) {
 				console.debug("   Error:", err);
@@ -175,11 +175,13 @@ export function cmd(timeout, ...commands) {
 			if (timer) clearTimeout(timer);
 
 			if (signal) {
+				killTree();
 				reject(new Error(`npx terminated by signal ${signal}`));
 				return;
 			}
 
 			if (code !== 0) {
+				killTree();
 				reject(new Error(`npx failed with exit code ${code}\n${stderr}`));
 				return;
 			}
@@ -538,7 +540,6 @@ export function spliceWildcard(obj, argIndex, argValue, argsCount) {
 export async function toolkitRun(settings, args) {
 	return new Promise((resolve, reject) => {
 		const bin = `${settings.paths.toolkitBinPath}`;
-		const { timeout } = settings;
 		const child = spawn(bin, args, {
 			detached: process.env.WITSDK_DRY_RUN_DETACHED ? Boolean(process.env.WITSDK_DRY_RUN_DETACHED === "true") : process.platform !== "win32",
 			shell: process.env.WITSDK_DRY_RUN_SHELL ? Boolean(process.env.WITNET_SDK_DRY_RUN_SHELL === "true") : process.platform === "win32",
@@ -560,20 +561,10 @@ export async function toolkitRun(settings, args) {
 					spawn("taskkill", ["/PID", child.pid.toString(), "/T", "/F"]);
 				} else {
 					// kill entire process group
-					process.kill(-child.pid, "SIGKILL");
+					process.kill(child.pid, "SIGKILL");
 				}
 			} catch {}
 		};
-
-		const timer =
-			timeout > 0
-				? setTimeout(() => {
-						if (finished) return;
-						finished = true;
-						killTree();
-						reject(new Error(`witnet_toolkit binary timed out after ${commas(timeout)} ms`));
-					}, timeout)
-				: null;
 
 		child.stdout.on("data", (d) => (stdout += d.toString()));
 		child.stderr.on("data", (d) => (stderr += d.toString()));
@@ -592,11 +583,13 @@ export async function toolkitRun(settings, args) {
 			if (timer) clearTimeout(timer);
 
 			if (signal) {
+				killTree();
 				reject(new Error(`witnet_toolkit binary terminated by signal ${signal}`));
 				return;
 			}
 
 			if (code !== 0) {
+				killTree();
 				reject(new Error(`witnet_toolkit binary failed with exit code ${code}\n${stderr}`));
 				return;
 			}
