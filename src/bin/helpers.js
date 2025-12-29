@@ -526,15 +526,71 @@ export function spliceWildcard(obj, argIndex, argValue, argsCount) {
 }
 
 export async function toolkitRun(settings, args) {
-	const cmd = `${settings.paths.toolkitBinPath} ${args.join(" ")}`;
 	return new Promise((resolve, reject) => {
-		exec(cmd, { timeout: _TOOLKIT_RUN_TIMEOUT_MSECS, maxBuffer: 1024 * 1024 * 10 }, (error, stdout, stderr) => {
-			if (error) {
-				reject(error);
+		const bin = `${settings.paths.toolkitBinPath}`;
+		const { timeout } = settings
+		const child = spawn(bin, args, {
+			detached: process.env.WITSDK_DRY_RUN_DETACHED || false,
+			shell: process.platform === "win32",
+			stdio: ["ignore", "pipe", "pipe"],
+			env: {
+				...process.env,
+				NPM_CONFIG_YES: "true", // => prevents npx from spawning interactive prompts
+			},
+		});
+
+		let stdout = "";
+		let stderr = "";
+		let finished = false;
+
+		const killTree = () => {
+			if (!child.pid) return;
+			try {
+				if (process.platform === "win32") {
+					spawn("taskkill", ["/PID", child.pid.toString(), "/T", "/F"]);
+				} else {
+					// kill entire process group
+					process.kill(-child.pid, "SIGKILL");
+				}
+			} catch {}
+		};
+
+		const timer =
+			timeout > 0
+				? setTimeout(() => {
+						if (finished) return;
+						finished = true;
+						killTree();
+						reject(new Error(`witnet_toolkit binary timed out after ${commas(timeout)} ms`));
+					}, timeout)
+				: null;
+
+		child.stdout.on("data", (d) => (stdout += d.toString()));
+		child.stderr.on("data", (d) => (stderr += d.toString()));
+
+		child.on("error", (err) => {
+			if (finished) return;
+			finished = true;
+			if (timer) clearTimeout(timer);
+			killTree();
+			reject(err);
+		});
+
+		child.on("close", (code, signal) => {
+			if (finished) return;
+			finished = true;
+			if (timer) clearTimeout(timer);
+
+			if (signal) {
+				reject(new Error(`witnet_toolkit binary terminated by signal ${signal}`));
+				return;
 			}
-			if (stderr) {
-				reject(stderr);
+
+			if (code !== 0) {
+				reject(new Error(`witnet_toolkit binary failed with exit code ${code}\n${stderr}`));
+				return;
 			}
+
 			resolve(stdout);
 		});
 	});

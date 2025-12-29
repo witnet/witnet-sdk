@@ -82,11 +82,15 @@ export const router = {
 			},
 			headline: {
 				hint: "Settles output report headline.",
-				param: ":string",
+				param: "TEXT",
 			},
 			indent: {
 				hint: "Prefixes given number of white spaces for every output line.",
-				param: ":number",
+				param: "SPACES",
+			},
+			timeout: {
+				hint: "Maximum time in milliseconds to wait for the dry run to finish.",
+				param: "MSECS"
 			},
 			verbose: {
 				hint: "Outputs detailed dry-run report.",
