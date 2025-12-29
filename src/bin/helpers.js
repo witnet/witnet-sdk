@@ -133,6 +133,8 @@ export function cmd(timeout, ...commands) {
 		let finished = false;
 
 		const killTree = () => {
+			console.debug("=> Killing process tree with PID:", child.pid)
+			console.debug("   Command:", `${bin} ${args.join(" ")}`)
 			if (!child.pid) return;
 			try {
 				if (process.platform === "win32") {
@@ -141,7 +143,9 @@ export function cmd(timeout, ...commands) {
 					// kill entire process group
 					process.kill(-child.pid, "SIGKILL");
 				}
-			} catch {}
+			} catch (err) {
+				console.debug("   Error:", err)
+			}
 		};
 
 		const timer =
