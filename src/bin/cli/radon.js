@@ -90,7 +90,7 @@ export const router = {
 			},
 			timeout: {
 				hint: "Maximum time in milliseconds to wait for the dry run to finish.",
-				param: "MSECS"
+				param: "MSECS",
 			},
 			verbose: {
 				hint: "Outputs detailed dry-run report.",
