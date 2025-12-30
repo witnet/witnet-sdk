@@ -141,7 +141,7 @@ export function cmd(timeout, ...commands) {
 			console.debug("=> Killing process tree with PID:", child.pid);
 			console.debug("   Command:", `${bin} ${args.join(" ")}`);
 			if (!child.pid) return;
-			kill(child.pid, (err) => console.debug("   Error:", err));
+			kill(child.pid, (err) => { if (err) console.debug("   Error:", err) });
 		};
 
 		const timer =
@@ -553,25 +553,12 @@ export async function toolkitRun(settings, args) {
 		let stderr = "";
 		let finished = false;
 
-		// const killTree = () => {
-		// 	if (!child.pid) return;
-		// 	try {
-		// 		if (process.platform === "win32") {
-		// 			spawn("taskkill", ["/PID", child.pid.toString(), "/T", "/F"]);
-		// 		} else {
-		// 			// kill entire process group
-		// 			process.kill(child.pid, "SIGKILL");
-		// 		}
-		// 	} catch {}
-		// };
-
 		child.stdout.on("data", (d) => (stdout += d.toString()));
 		child.stderr.on("data", (d) => (stderr += d.toString()));
 
 		child.on("error", (err) => {
 			if (finished) return;
 			finished = true;
-			// killTree();
 			reject(err);
 		});
 
@@ -580,13 +567,11 @@ export async function toolkitRun(settings, args) {
 			finished = true;
 
 			if (signal) {
-				// killTree();
 				reject(new Error(`witnet_toolkit binary terminated by signal ${signal}`));
 				return;
 			}
 
 			if (code !== 0) {
-				// killTree();
 				reject(new Error(`witnet_toolkit binary failed with exit code ${code}\n${stderr}`));
 				return;
 			}
