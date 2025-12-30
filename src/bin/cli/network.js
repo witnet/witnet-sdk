@@ -419,20 +419,19 @@ async function stakes(options = {}) {
 async function supplyInfo(options = {}) {
 	const reporter = new Witnet.JsonRpcProvider(options?.provider || process.env.WITNET_SDK_PROVIDER_URL);
 	const data = await reporter.supplyInfo();
-	console.info(`> Supply info at epoch ${helpers.colors.white(helpers.commas(data.epoch))}:`);
+	console.info(`> Supply info at epoch ${
+		helpers.colors.white(helpers.commas(data.epoch))
+	}:`);
 	const records = [];
 	records.push(["Minted blocks", `${helpers.toFixedTrunc((100 * data.blocks_minted) / (data.epoch - 1), 1)} %`]);
 	records.push(["Minted rewards", helpers.whole_wits(data.blocks_minted_reward, 2)]);
-	if (data.burnt_supply) {
-		records.push(["Burnt supply", helpers.whole_wits(data.burnt_supply, 2)]);
-	}
-	if (data.current_locked_supply) {
-		records.push(["Locked supply", helpers.whole_wits(data.current_locked_supply, 2)]);
-	}
 	if (data.current_staked_supply) {
 		records.push(["Staked supply", helpers.whole_wits(data.current_staked_supply, 2)]);
 	}
-	records.push(["Circulating supply", helpers.whole_wits(data.current_unlocked_supply, 2)]);
+	records.push(["Circulating supply", helpers.whole_wits(
+		BigInt(data.genesis_supply) + BigInt(data.blocks_minted_reward) - BigInt(data.current_staked_supply),
+		2
+	)]);
 	helpers.traceTable(records, {
 		headlines: [":KPI", "VALUE"],
 		colors: [helpers.colors.mgreen, helpers.colors.myellow],
