@@ -16,7 +16,7 @@ export enum Methods {
 	GetPkh = "getPkh",
 	GetPublicKey = "getPublicKey",
 	GetSuperblock = "getSuperblock",
-	GetSupplyInfo = "getSupplyInfo2",
+	GetSupplyInfo = "getSupplyInfo",
 	GetTransaction = "getTransaction",
 	GetUtxoInfo = "getUtxoInfo",
 	GetValueTransfer = "getValueTransfer",
@@ -485,8 +485,8 @@ export type StakingPower = {
 };
 
 // Superblock consolidating metadata
-//As per current consensus algorithm, "consolidated blocks" implies that there exists at least one
-//superblock in the chain that builds upon the superblock where those blocks were anchored.
+// As per current consensus algorithm, "consolidated blocks" implies that there exists at least one
+// superblock in the chain that builds upon the superblock where those blocks were anchored.
 export type SuperblockReport = {
 	//The superblock that we are signaling as consolidated.
 	superblock: {
@@ -509,8 +509,20 @@ export type SuperblockReport = {
 	consolidated_block_hashes: Array<Hash>;
 };
 
-// Information about the total supply
 export type SupplyInfo = {
+	//Current epoch
+    epoch: u32,
+    //Current time
+    current_time: u64,
+    //Number of blocks minted
+    blocks_minted: u32,
+    //WIT minted through block creation
+    blocks_minted_reward: u64,
+    //Current staked supply
+    current_staked_supply: u64,
+    //Genesis supply
+    genesis_supply: u64,
+}
 	//Current epoch
 	epoch: u32;
 	//Current time
