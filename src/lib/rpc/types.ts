@@ -17,6 +17,7 @@ export enum Methods {
 	GetPublicKey = "getPublicKey",
 	GetSuperblock = "getSuperblock",
 	GetSupplyInfo = "getSupplyInfo",
+	GetSupplyInfo2 = "getSupplyInfo2",
 	GetTransaction = "getTransaction",
 	GetUtxoInfo = "getUtxoInfo",
 	GetValueTransfer = "getValueTransfer",
@@ -523,6 +524,9 @@ export type SupplyInfo = {
     //Genesis supply
     genesis_supply: u64,
 }
+
+// Information about the total supply provided by the `getSupplyInfo2` sensitive method
+export type SupplyInfo2 = {
 	//Current epoch
 	epoch: u32;
 	//Current time

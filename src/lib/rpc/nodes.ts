@@ -10,6 +10,7 @@ import {
 	type PeerAddr,
 	type StakeAuthorization,
 	type StakeEntry,
+	type SupplyInfo2,
 	type SyncStatus,
 } from "./types.js";
 
@@ -29,6 +30,7 @@ export interface IJsonRpcNodeFarm extends IJsonRpcProvider {
 	clearPeers(): Promise<Record<string, boolean>>;
 	initializePeers(): Promise<Record<string, boolean>>;
 	rewind(epoch: Epoch): Promise<Record<string, boolean>>;
+	supplyInfo2(): Promise<SupplyInfo2 | undefined>;
 }
 
 function isPrivateURL(url: string): boolean {
@@ -322,5 +324,19 @@ export class JsonRpcNodeFarm extends JsonRpcProvider implements IJsonRpcNodeFarm
 
 	public async rewind(epoch: Epoch): Promise<Record<string, boolean>> {
 		return this.batchApiMethod<boolean>(Methods.Rewind, [epoch]);
+	}
+
+	/// Get supply info
+	public async supplyInfo2(): Promise<SupplyInfo2 | undefined> {
+		return this.addresses()
+			.then(async (addresses: Record<string, Error | string>) => {
+				return Promise.all(
+					Object.entries(addresses).map(async ([url,]) => {
+						return this.callApiMethod<SupplyInfo2>(url, Methods.GetSupplyInfo2)
+					})
+				).then((supplies: Array<SupplyInfo2>) => {
+					return supplies.find(result => !(result instanceof Error))
+				})
+			})
 	}
 }
