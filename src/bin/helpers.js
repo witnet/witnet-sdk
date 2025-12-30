@@ -141,7 +141,9 @@ export function cmd(timeout, ...commands) {
 			console.debug("=> Killing process tree with PID:", child.pid);
 			console.debug("   Command:", `${bin} ${args.join(" ")}`);
 			if (!child.pid) return;
-			kill(child.pid, (err) => { if (err) console.debug("   Error:", err) });
+			kill(child.pid, (err) => {
+				if (err) console.debug("   Error:", err);
+			});
 		};
 
 		const timer =

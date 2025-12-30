@@ -328,15 +328,14 @@ export class JsonRpcNodeFarm extends JsonRpcProvider implements IJsonRpcNodeFarm
 
 	/// Get supply info
 	public async supplyInfo2(): Promise<SupplyInfo2 | undefined> {
-		return this.addresses()
-			.then(async (addresses: Record<string, Error | string>) => {
-				return Promise.all(
-					Object.entries(addresses).map(async ([url,]) => {
-						return this.callApiMethod<SupplyInfo2>(url, Methods.GetSupplyInfo2)
-					})
-				).then((supplies: Array<SupplyInfo2>) => {
-					return supplies.find(result => !(result instanceof Error))
-				})
-			})
+		return this.addresses().then(async (addresses: Record<string, Error | string>) => {
+			return Promise.all(
+				Object.entries(addresses).map(async ([url]) => {
+					return this.callApiMethod<SupplyInfo2>(url, Methods.GetSupplyInfo2);
+				}),
+			).then((supplies: Array<SupplyInfo2>) => {
+				return supplies.find((result) => !(result instanceof Error));
+			});
+		});
 	}
 }
