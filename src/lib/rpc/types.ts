@@ -512,18 +512,18 @@ export type SuperblockReport = {
 
 export type SupplyInfo = {
 	//Current epoch
-    epoch: u32,
-    //Current time
-    current_time: u64,
-    //Number of blocks minted
-    blocks_minted: u32,
-    //WIT minted through block creation
-    blocks_minted_reward: u64,
-    //Current staked supply
-    current_staked_supply: u64,
-    //Genesis supply
-    genesis_supply: u64,
-}
+	epoch: u32;
+	//Current time
+	current_time: u64;
+	//Number of blocks minted
+	blocks_minted: u32;
+	//WIT minted through block creation
+	blocks_minted_reward: u64;
+	//Current staked supply
+	current_staked_supply: u64;
+	//Genesis supply
+	genesis_supply: u64;
+};
 
 // Information about the total supply provided by the `getSupplyInfo2` sensitive method
 export type SupplyInfo2 = {
