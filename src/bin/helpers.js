@@ -193,17 +193,7 @@ export async function execRadonBytecode(bytecode, timeout, ...flags) {
 		throw EvalError("invalid hex string");
 	} else {
 		const npx = os.type() === "Windows_NT" ? "npx.cmd" : "npx";
-		return cmd(
-			timeout || _TOOLKIT_RUN_TIMEOUT_MSECS,
-			npx,
-			"witsdk",
-			"radon",
-			"dry-run",
-			bytecode,
-			"--timeout",
-			timeout || _TOOLKIT_RUN_TIMEOUT_MSECS,
-			...flags,
-		);
+		return cmd(timeout || _TOOLKIT_RUN_TIMEOUT_MSECS, npx, "witsdk", "radon", "dry-run", bytecode, ...flags);
 	}
 }
 
@@ -574,10 +564,9 @@ export async function toolkitRun(settings, args) {
 			}
 
 			if (code !== 0) {
-				reject(new Error(`witnet_toolkit binary failed with exit code ${code}\n${stderr}`));
+				reject(new Error(`witnet_toolkit binary failed with exit code ${code}:\n${stderr}`));
 				return;
 			}
-
 			resolve(stdout);
 		});
 	});
