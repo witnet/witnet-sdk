@@ -627,7 +627,12 @@ function traceWitnetRadonRequest(request, options) {
 async function traceWitnetRadonRequestDryRun(request, options) {
 	const bytecode = request.toBytecode();
 	let report = await helpers
-		.toolkitRun(options, ["try-data-request", "--hex", bytecode.startsWith("0x") ? bytecode.slice(2) : bytecode])
+		.toolkitRun(options, [
+			"try-data-request",
+			"--hex",
+			bytecode.startsWith("0x") ? bytecode.slice(2) : bytecode,
+			...(options?.timeout ? ["--timeout", options.timeout] : []),
+		])
 		.catch((err) => {
 			let errorMessage = err.message.split("\n").slice(1).join("\n").trim();
 			const errorRegex = /.*^error: (?<message>.*)$.*/gm;
