@@ -28,7 +28,7 @@ import {
 
 const __dirname = import.meta.dirname;
 
-const version = "2.0.24";
+const version = "2.0.25";
 const toolkitDownloadUrlBase = `https://github.com/witnet/witnet-rust/releases/download/${version}/`;
 const toolkitDownloadNames = {
 	win32: (arch) => `witnet_toolkit-${arch}-pc-windows-msvc.exe`,
