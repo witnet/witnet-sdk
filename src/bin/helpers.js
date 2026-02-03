@@ -125,7 +125,7 @@ export function cmd(timeout, ...commands) {
 				: process.platform !== "win32",
 			shell: process.env.WITSDK_DRY_RUN_SHELL
 				? Boolean(process.env.WITNET_SDK_DRY_RUN_SHELL === "true")
-				: process.platform === "win32",
+				: true,
 			stdio: ["ignore", "pipe", "pipe"],
 			env: {
 				...process.env,
