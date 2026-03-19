@@ -3,6 +3,8 @@
 > Typescript library and CLI tooling for Web3 buidlers willing to interact with the Witnet blockchain.
 > The **Witnet Javascript SDK** empowers devops and Web3 developers to seamlessly interact with the Witnet blockchain.
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/witnet/witnet-sdk)
+
 ## ✨ Overview
 
 Users of the Witnet Javascript library or the embedded CLI tools, will be able to:
