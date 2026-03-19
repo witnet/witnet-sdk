@@ -27,11 +27,12 @@ export type DataRequestParams = TransactionParams & {
 };
 
 type DataRequestOutputSLA = {
-	collateral: number;
-	commitAndRevealFee: number;
+	collateral?: number;
+	commitAndRevealFee?: number;
 	minConsensusPercentage: number;
 	witnesses: number;
-	witnessReward?: number;
+	witnessReward: number;
+	maxResultSize?: number;
 };
 
 const COLLATERAL_RATIO = 100n;
@@ -263,9 +264,9 @@ export class DataRequestPayload extends TransactionPayloadMultiSig<DataRequestPa
 		this._target = target;
 		if (this.droSLA?.collateral && this.droSLA.collateral < DataRequestPayload.MIN_COLLATERAL) {
 			throw new TypeError(
-				`${this.constructor.name}: witnessing collateral below minimum: ${this.droSLA.collateral} < ${
-					DataRequestPayload.MIN_COLLATERAL
-				}`,
+				`${this.constructor.name}: witnessing collateral below minimum: ${
+					this.droSLA.collateral
+				} < ${DataRequestPayload.MIN_COLLATERAL}`,
 			);
 		}
 		if (this.template) {
@@ -284,7 +285,9 @@ export class DataRequestPayload extends TransactionPayloadMultiSig<DataRequestPa
 	public toJSON(humanize = false): any {
 		const droSLA = this.droSLA;
 		return {
-			inputs: this.inputs.map((utxo) => ({ output_pointer: utxo.output_pointer })),
+			inputs: this.inputs.map((utxo) => ({
+				output_pointer: utxo.output_pointer,
+			})),
 			outputs: this.outputs.map((vto) => ({
 				pkh: vto.pkh,
 				time_lock: vto.time_lock,
@@ -309,13 +312,17 @@ export class DataRequestPayload extends TransactionPayloadMultiSig<DataRequestPa
 					const outputIndex = parseInt(utxo.output_pointer.split(":")[1], 10);
 					return {
 						outputPointer: {
-							transactionId: { SHA256: Array.from(fromHexString(transactionId)) },
+							transactionId: {
+								SHA256: Array.from(fromHexString(transactionId)),
+							},
 							...(outputIndex > 0 ? { outputIndex } : {}),
 						},
 					};
 				}),
 				outputs: this.outputs.map((vto) => ({
-					pkh: { hash: Array.from(PublicKeyHash.fromBech32(vto.pkh).toBytes20()) },
+					pkh: {
+						hash: Array.from(PublicKeyHash.fromBech32(vto.pkh).toBytes20()),
+					},
 					value: Long.fromValue(vto.value),
 					...(vto.time_lock > 0 ? { timeLock: vto.time_lock } : {}),
 				})),
